@@ -80,7 +80,7 @@ def save_text():
 		i = a + k + b + k + c + k + d + k + e + k + f
 		contents.append(i)
 	with open('bookNameList','w',encoding='utf-8') as f:
-		for i in ctt:
+		for i in contents:
 			f.write(i+'\n')
 
 			
