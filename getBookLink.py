@@ -53,7 +53,6 @@ def get_html(url):
 		html_content = req.content.decode(encoding, 'replace') #如果设置为replace，则会用?取代非法字符；
 		global html
 		html = BeautifulSoup(html_content,'html.parser')
-		print(html)
 
 
 

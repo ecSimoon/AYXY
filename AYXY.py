@@ -11,7 +11,6 @@ def getUrl():
 	global choice_types
 	global choice_methmod
 	url = 'http://218.28.96.52:8899/museweb/wxjs/tmjs.asp?'
-	
 	print('1.题名') 
 	print('2.题名拼音头')
 	choice_types = input('请选择查询方法')
@@ -92,7 +91,7 @@ def save_excle():
 				ws.append(contents)
    
 
-		wb.save('%s.xlsx'%bookname)
+		wb.save('%s.xlsx'%'workpython')
 
 def save_choice():
 		while True:
@@ -120,8 +119,8 @@ def save_choice():
 
 
 if __name__ == '__main__':
-	getUrl()
-	get_html(urls) #获取html
+
+	get_html('http://218.28.96.52:8899/museweb/wxjs/fljs.asp?page=1&cTmpFl=TP&nmaxcount=0&cFllx=%&nSetPageSize=1000&lUseSqh=1') #获取html
 	getBookContent() 
 	
 	booknamelist = [content[num][2] for num in      range(len(content))]
