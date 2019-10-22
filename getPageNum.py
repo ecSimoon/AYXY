@@ -20,16 +20,26 @@ def get_html(url):
 		html = BeautifulSoup(html_content,'html.parser')
 
 
-url = 'http://218.28.96.52:8899/museweb/wxjs/tmjs.asp?page=1p&txtWxlx=CN&txtTm=python&txtLx=%25&txtSearchType=1&nMaxCount=100&nSetPageSize=10&txtPy=HZ&cSortFld=%D5%FD%CC%E2%C3%FB'
+
 
 
 def getPageNum(html):
 	content = html.text
 	ctPageslist = content.split('\n\n')
-	ctPage = list[19].replace(u'\xa0', u'')
+	ctPage = ctPageslist[19].replace(u'\xa0', u' ')
 	global pageNumber
-	pageNumber = re.search('[\s\S]*([\d+]).*',ct).group(1)
+	pageNumber = re.search('[\s\S]*([\d+]).*',ctPage).group(1)
+	print(pageNumber)
+	
+def getmain(url):
+    get_html(url)
+    getPageNum(html)
 
-if __name__ in '__main__':
-	get_html(url)
-	getPageNum(html)
+if __name__ == '__main__':
+    url = 'http://218.28.96.52:8899/museweb/wxjs/tmjs.asp?page=1p&txtWxlx=CN&txtTm=python&txtLx=%25&txtSearchType=1&nMaxCount=100&nSetPageSize=10&txtPy=HZ&cSortFld=%D5%FD%CC%E2%C3%FB'
+    getman(url)
+
+
+    
+
+
