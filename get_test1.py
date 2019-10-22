@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-
+import re
 
 def get_html(url):									
 	headers = {"User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1",}
@@ -20,9 +20,16 @@ def get_html(url):
 		html = BeautifulSoup(html_content,'html.parser')
 
 
-get_html('http://218.28.96.52:8899/museweb/wxjs/tmjs.asp?page=1p&txtWxlx=CN&txtTm=python&txtLx=%25&txtSearchType=1&nMaxCount=100&nSetPageSize=10&txtPy=HZ&cSortFld=%D5%FD%CC%E2%C3%FB')
+url = 'http://218.28.96.52:8899/museweb/wxjs/tmjs.asp?page=1p&txtWxlx=CN&txtTm=python&txtLx=%25&txtSearchType=1&nMaxCount=100&nSetPageSize=10&txtPy=HZ&cSortFld=%D5%FD%CC%E2%C3%FB'
 
-content = html.text
 
-list = content.split('\n\n')
-ct = list[19].replace(u'\xa0', u'')
+def getPageNum(html):
+	content = html.text
+	ctPageslist = content.split('\n\n')
+	ctPage = list[19].replace(u'\xa0', u'')
+	global pageNumber
+	pageNumber = re.search('[\s\S]*([\d+]).*',ct).group(1)
+
+if __name__ in '__main__':
+	get_html(url)
+	getPageNum(html)
