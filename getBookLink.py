@@ -56,7 +56,7 @@ def get_html(url):
 
 
 
-#获取书名与链接
+#获取书名与链接 
 def getBookLinke_name(html):
     content = html.find_all('a')
     global bookLink_Name
