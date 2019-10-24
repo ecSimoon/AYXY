@@ -58,7 +58,9 @@ def get_html(url):
 
 #获取书名与链接
 def getBookLinke_name(html):
-    content = html.find_all('a') 
+    content = html.find_all('a')
+    global bookLink_Name
+    bookLink_Name = list()
     for indexs in range(10,len(content)-1):
         li = list()
         bookinfo = content[indexs]
@@ -76,7 +78,6 @@ def getBookLinke_name(html):
 
 
 if __name__ == '__main__':
-    bookLink_Name = list()
     getUrl()
     get_html(urls)  
     getBookLinke_name(html)
