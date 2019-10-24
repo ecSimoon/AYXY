@@ -68,7 +68,14 @@ def getBooklink(htmlContent):
         li.append(bookName)
         li.append(bookLink3)
         bookLink(li)
-
+	
+def getPageNum(html):
+	content = html.text
+	ctPageslist = content.split('\n\n')
+	ctPage = ctPageslist[19].replace(u'\xa0', u' ')
+	global pageNumber
+	pageNumber = re.search('[\s\S]*([\d+]).*',ctPage).group(1)
+	print(pageNumber)
 
             
 
