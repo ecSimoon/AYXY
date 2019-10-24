@@ -23,13 +23,13 @@ def get_html(url):
 
 
 
+#获取页面数量
 def getPageNum(html):
+	global pageNumber
 	content = html.text
 	ctPageslist = content.split('\n\n')
 	ctPage = ctPageslist[19].replace(u'\xa0', u' ')
-	global pageNumber
 	pageNumber = re.search('[\s\S]*([\d+]).*',ctPage).group(1)
-	print(pageNumber)
 	
 def getmain(url):
     get_html(url)
