@@ -1,12 +1,13 @@
 import requests
 import urllib
 from bs4 import BeautifulSoup
+import re
 
-
- #书名与链接 列表
+cbookLink_Name = list() #书名与链接 列表
 content = list()  #书籍内容
 
-def getUrl():
+
+def getUrl(page=1):
 	global bookname
 	global choice_types
 	global choice_methmod
@@ -27,7 +28,8 @@ def getUrl():
 	
 	bookname = urllib.parse.quote(input('\n查询书名:'))
 	
-	parms = {     
+	parms = {
+     "page":page ,
 	"txtWxlx":"CN",
 	"txtTm":bookname,
 	"txtSearchType":choice_methmod, 
@@ -53,8 +55,25 @@ def get_html(urls):
 		global html
 		html = BeautifulSoup(html_content,'html.parser')
 
+#获取页面数量
+def getPageNum(html):
+        content = html.text
+        ctPageslist = content.split('\n\n')
+        ctPage = ctPageslist[19].replace(u'\xa0', u' ')
+        pageNumber = re.search('[\s\S]*([\d+]).*',ctPage).group(1)
+        return pageNumber
 
-
+#获取书名与链接
+def getBookLinke_name(html):
+    content = html.find_all('a')
+    for indexs in range(10,len(content)-1):
+        li = list()
+        bookinfo = content[indexs]
+        bookName = bookinfo.string.strip()
+        bookLink1 = bookinfo['href']
+        bookLink2 = re.search('(\d+)',bookLink1).group(0)
+        bookLink3 = 'http://218.28.96.52:8899/museweb/showmarc/table.asp?nTmpKzh=%s'%bookLink2
+        
 #获取馆藏查询内容
 def getBookContent():
 	html_content = html.select('td[class]')
@@ -68,8 +87,17 @@ def getBookContent():
 		#print(book_list.pop(0))
 			ls.append(book_list.pop(0))
 		content.append(ls)
-					
-
+		
+		
+def print_content():
+	exact,bookname = [content[num][1] for num in      range(len(content))],[content[num][2] for num in      range(len(content))]
+	for i in range(len(content)):
+		exacts = exact[i]
+		booknames = bookname[i]
+		print('\n索引号: %s\n书名: %s'%(exacts,booknames))
+	input('[+]Please enter the carriage return and continue...')
+	
+	
 def save_text():
 	contents = list()
 	for i in range(len(content)):
@@ -117,19 +145,20 @@ def save_choice():
 		        else:
 		            print('请输入正确的选项')
 
-
-if __name__ == '__main__':
-
-	get_html('http://218.28.96.52:8899/museweb/wxjs/fljs.asp?page=1&cTmpFl=TP&nmaxcount=0&cFllx=%&nSetPageSize=1000&lUseSqh=1') #获取html
-	getBookContent() 
+def main():
+	getUrl() 
 	
-	booknamelist = [content[num][2] for num in      range(len(content))]
-	for name in booknamelist:
-		print(name)
+	get_html(urls) #获取html
+	getBookContent() #获取查询书籍内容
+	
+	print_content() #输出 书名与索引号
 	
 	save_choice()   #选择保存的方式
 	
-	
+
+
+if __name__ == '__main__':
+	main()
 
 
 
