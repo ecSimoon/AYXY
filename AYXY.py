@@ -36,8 +36,8 @@ def getUrls(page=1):
 	"txtTm":bookname,
 	"txtSearchType":choice_methmod, 
 	'txtPY':choice_types,
-	"nSetPageSize":"100"
-	'nMaxCount':'0'
+	"nSetPageSize":"100",
+	"nMaxCount":"0"
 	}  														
 	urlParms = urllib.parse.urlencode(parms)
 	global urls
