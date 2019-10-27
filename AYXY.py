@@ -3,15 +3,16 @@ import urllib
 from bs4 import BeautifulSoup
 import re
 
-cbookLink_Name = list() #书名与链接 列表
+
+bookLink = list() #书名与链接 列表
 content = list()  #书籍内容
+url = 'http://218.28.96.52:8899/museweb/wxjs/tmjs.asp?' #查询接口
 
 
-def getUrl(page=1):
+def getUrl():
 	global bookname
 	global choice_types
 	global choice_methmod
-	url = 'http://218.28.96.52:8899/museweb/wxjs/tmjs.asp?'
 	print('1.题名') 
 	print('2.题名拼音头')
 	choice_types = input('请选择查询方法')
@@ -27,7 +28,8 @@ def getUrl(page=1):
 	choice_methmod = input('请选择查询方法')
 	
 	bookname = urllib.parse.quote(input('\n查询书名:'))
-	
+
+def getUrls(page=1):
 	parms = {
      "page":page ,
 	"txtWxlx":"CN",
@@ -35,6 +37,7 @@ def getUrl(page=1):
 	"txtSearchType":choice_methmod, 
 	'txtPY':choice_types,
 	"nSetPageSize":"100"
+	'nMaxCount':'0'
 	}  														
 	urlParms = urllib.parse.urlencode(parms)
 	global urls
@@ -55,6 +58,17 @@ def get_html(urls):
 		global html
 		html = BeautifulSoup(html_content,'html.parser')
 
+
+def get_htmls():
+	page = int(getPageNum(html))
+	if page > 1:
+		for pages in range(2,page+1):
+			getUrls(pages)
+			get_html(urls)
+			getBookContent()
+
+
+
 #获取页面数量
 def getPageNum(html):
         content = html.text
@@ -63,8 +77,9 @@ def getPageNum(html):
         pageNumber = re.search('[\s\S]*([\d+]).*',ctPage).group(1)
         return pageNumber
 
+
 #获取书名与链接
-def getBookLinke_name(html):
+def getLink(html):
     content = html.find_all('a')
     for indexs in range(10,len(content)-1):
         li = list()
@@ -73,8 +88,12 @@ def getBookLinke_name(html):
         bookLink1 = bookinfo['href']
         bookLink2 = re.search('(\d+)',bookLink1).group(0)
         bookLink3 = 'http://218.28.96.52:8899/museweb/showmarc/table.asp?nTmpKzh=%s'%bookLink2
+        li.append(bookName)
+        li.append(bookLink3)
+        bookLink.append(li)
+
         
-#获取馆藏查询内容
+#获取馆藏查询内容 ！！！
 def getBookContent():
 	html_content = html.select('td[class]')
 	book_list = list()
@@ -118,8 +137,8 @@ def save_excle():
 		for contents in content:
 				ws.append(contents)
    
-
 		wb.save('%s.xlsx'%'workpython')
+
 
 def save_choice():
 		while True:
@@ -145,16 +164,21 @@ def save_choice():
 		        else:
 		            print('请输入正确的选项')
 
+
 def main():
 	getUrl() 
+	getUrls()
 	
 	get_html(urls) #获取html
 	getBookContent() #获取查询书籍内容
+
+	get_htmls() #获取更多的 书籍内容
+
 	
 	print_content() #输出 书名与索引号
 	
 	save_choice()   #选择保存的方式
-	
+
 
 
 if __name__ == '__main__':
