@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import re
 
 
-bookLink = list() #书名与链接 列表
+bookLink = [[7,'链接']] #书名与链接 列表
 content = list()  #书籍内容
 url = 'http://218.28.96.52:8899/museweb/wxjs/tmjs.asp?' #查询接口
 
@@ -65,6 +65,7 @@ def get_htmls():
 		for pages in range(2,page+1):
 			getUrls(pages)
 			get_html(urls)
+			getLink()
 			getBookContent()
 
 
@@ -97,14 +98,18 @@ def getLink(html):
 def getBookContent():
 	html_content = html.select('td[class]')
 	book_list = list()
+
 	for i in html_content:
 		#print(i.get_text().strip())
 		book_list.append(i.get_text().strip())	
+
 	for j in range(len(book_list)//6):
 		ls = list()
 		for i in range(6):
 		#print(book_list.pop(0))
 			ls.append(book_list.pop(0))
+		link = bookLink.pop(0)
+		ls.append(link[1])
 		content.append(ls)
 		
 		
@@ -121,9 +126,9 @@ def save_text():
 	contents = list()
 	for i in range(len(content)):
 		ct = content[i]
-		a,b,c,d,e,f=ct[0],ct[1],ct[2],ct[3],ct[4],ct[5]
+		a,b,c,d,e,f,g=ct[0],ct[1],ct[2],ct[3],ct[4],ct[5],ct[6]
 		k = '	'
-		i = a + k + b + k + c + k + d + k + e + k + f
+		i = a + k + b + k + c + k + d + k + e + k + f + k + g
 		contents.append(i)
 	with open('bookNameList','w',encoding='utf-8') as f:
 		for i in contents:
@@ -170,13 +175,13 @@ def main():
 	getUrls()
 	
 	get_html(urls) #获取html
-	getBookContent() #获取查询书籍内容
 
+	getLink(html) #获取书籍链接
+	getBookContent() #获取查询书籍内容
 	get_htmls() #获取更多的 书籍内容
 
 	
 	print_content() #输出 书名与索引号
-	
 	save_choice()   #选择保存的方式
 
 
